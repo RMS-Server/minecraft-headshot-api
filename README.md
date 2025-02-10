@@ -31,7 +31,7 @@
 
 1. 克隆仓库：
 ```bash
-git clone https://github.com/yourusername/minecraft-headshot-api.git
+git clone https://github.com/XRain66/minecraft-headshot-api.git
 ```
 
 2. 安装依赖：
