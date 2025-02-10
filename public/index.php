@@ -8,6 +8,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 // 创建DI容器
 $container = new Container();
+$container->set('App\Services\SkinService', function() {
+    return new App\Services\SkinService();
+});
+
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 
@@ -23,22 +27,31 @@ $app->get('/head/{username}', function (Request $request, Response $response, ar
         $skinService = $this->get('App\Services\SkinService');
         
         // 获取并处理头像
-        $imageData = $skinService->getPlayerHead($username);
+        $result = $skinService->getPlayerHead($username);
         
-        // 设置响应头
-        $response = $response->withHeader('Content-Type', 'image/webp')
-                            ->withHeader('Cache-Control', 'public, max-age=3600');
+        // 检查是否是错误响应（JSON格式）
+        $isError = substr($result, 0, 1) === '{';
         
-        // 写入图片数据
-        $response->getBody()->write($imageData);
+        if ($isError) {
+            // 如果是错误响应，设置JSON Content-Type
+            $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
+        } else {
+            // 如果是图片响应，设置WebP Content-Type和缓存
+            $response = $response->withHeader('Content-Type', 'image/webp')
+                                ->withHeader('Cache-Control', 'public, max-age=3600');
+        }
+        
+        // 写入响应数据
+        $response->getBody()->write($result);
         return $response;
     } catch (Exception $e) {
-        // 错误处理
-        $response = $response->withStatus(500);
+        $response = $response->withStatus(500)
+                            ->withHeader('Content-Type', 'application/json; charset=utf-8');
         $response->getBody()->write(json_encode([
+            'success' => false,
             'error' => $e->getMessage()
         ]));
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response;
     }
 });
 

@@ -11,21 +11,55 @@ class SkinService
     private const TEXTURE_API_URL = 'https://sessionserver.mojang.com/session/minecraft/profile/';
     
     /**
+     * 错误代码定义
+     */
+    private const ERROR_CODES = [
+        'PLAYER_NOT_FOUND' => [
+            'code' => 404,
+            'message' => '玩家不存在或不是正版用户'
+        ],
+        'SKIN_NOT_FOUND' => [
+            'code' => 404,
+            'message' => '无法获取玩家皮肤信息'
+        ],
+        'DOWNLOAD_FAILED' => [
+            'code' => 500,
+            'message' => '下载皮肤失败'
+        ],
+        'PROCESS_FAILED' => [
+            'code' => 500,
+            'message' => '处理图片失败'
+        ]
+    ];
+
+    /**
      * 获取玩家头像
      */
     public function getPlayerHead(string $username): string
     {
-        // 获取玩家UUID
-        $uuid = $this->getPlayerUUID($username);
-        
-        // 获取皮肤URL
-        $skinUrl = $this->getPlayerSkinUrl($uuid);
-        
-        // 下载皮肤
-        $skinData = $this->downloadSkin($skinUrl);
-        
-        // 处理头像
-        return $this->processHeadImage($skinData);
+        try {
+            // 获取玩家UUID
+            $uuid = $this->getPlayerUUID($username);
+            
+            // 获取皮肤URL
+            $skinUrl = $this->getPlayerSkinUrl($uuid);
+            
+            // 下载皮肤
+            $skinData = $this->downloadSkin($skinUrl);
+            
+            // 处理头像
+            return $this->processHeadImage($skinData);
+        } catch (Exception $e) {
+            // 设置正确的 HTTP 状态码
+            http_response_code($this->getErrorCode($e->getMessage()));
+            
+            // 返回 JSON 格式的错误信息
+            header('Content-Type: application/json; charset=utf-8');
+            return json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], JSON_UNESCAPED_UNICODE);
+        }
     }
     
     /**
@@ -33,14 +67,16 @@ class SkinService
      */
     private function getPlayerUUID(string $username): string
     {
-        $response = file_get_contents(self::MOJANG_API_URL . urlencode($username));
+        // 使用 @ 抑制警告，并在 try-catch 中处理错误
+        $response = @file_get_contents(self::MOJANG_API_URL . urlencode($username));
+        
         if ($response === false) {
-            throw new Exception('无法获取玩家信息');
+            throw new Exception(self::ERROR_CODES['PLAYER_NOT_FOUND']['message']);
         }
         
         $data = json_decode($response, true);
         if (!isset($data['id'])) {
-            throw new Exception('玩家不存在');
+            throw new Exception(self::ERROR_CODES['PLAYER_NOT_FOUND']['message']);
         }
         
         return $data['id'];
@@ -51,19 +87,19 @@ class SkinService
      */
     private function getPlayerSkinUrl(string $uuid): string
     {
-        $response = file_get_contents(self::TEXTURE_API_URL . $uuid);
+        $response = @file_get_contents(self::TEXTURE_API_URL . $uuid);
         if ($response === false) {
-            throw new Exception('无法获取皮肤信息');
+            throw new Exception(self::ERROR_CODES['SKIN_NOT_FOUND']['message']);
         }
         
         $data = json_decode($response, true);
         if (!isset($data['properties'][0]['value'])) {
-            throw new Exception('无法获取皮肤数据');
+            throw new Exception(self::ERROR_CODES['SKIN_NOT_FOUND']['message']);
         }
         
         $textureData = json_decode(base64_decode($data['properties'][0]['value']), true);
         if (!isset($textureData['textures']['SKIN']['url'])) {
-            throw new Exception('无效的皮肤数据');
+            throw new Exception(self::ERROR_CODES['SKIN_NOT_FOUND']['message']);
         }
         
         return $textureData['textures']['SKIN']['url'];
@@ -74,9 +110,9 @@ class SkinService
      */
     private function downloadSkin(string $url): string
     {
-        $skinData = file_get_contents($url);
+        $skinData = @file_get_contents($url);
         if ($skinData === false) {
-            throw new Exception('无法下载皮肤');
+            throw new Exception(self::ERROR_CODES['DOWNLOAD_FAILED']['message']);
         }
         return $skinData;
     }
@@ -87,15 +123,15 @@ class SkinService
     private function processHeadImage(string $skinData): string
     {
         // 创建原始图片
-        $skin = imagecreatefromstring($skinData);
+        $skin = @imagecreatefromstring($skinData);
         if (!$skin) {
-            throw new Exception('无法处理皮肤图片');
+            throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
         }
         
         // 创建新图片
         $head = imagecreatetruecolor(8, 8);
         if (!$head) {
-            throw new Exception('无法创建头像图片');
+            throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
         }
         
         // 复制头部区域（8x8像素）
@@ -104,7 +140,7 @@ class SkinService
         // 放大图片
         $finalHead = imagecreatetruecolor(128, 128);
         if (!$finalHead) {
-            throw new Exception('无法创建最终头像');
+            throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
         }
         
         // 使用最近邻插值算法放大
@@ -121,5 +157,18 @@ class SkinService
         imagedestroy($finalHead);
         
         return $imageData;
+    }
+
+    /**
+     * 获取错误代码
+     */
+    private function getErrorCode(string $message): int
+    {
+        foreach (self::ERROR_CODES as $error) {
+            if ($error['message'] === $message) {
+                return $error['code'];
+            }
+        }
+        return 500; // 默认服务器错误
     }
 } 
