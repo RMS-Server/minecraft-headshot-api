@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Cache\CacheManager;
 use Exception;
 use GdImage;
 
@@ -9,6 +10,7 @@ class SkinService
 {
     private const MOJANG_API_URL = 'https://api.mojang.com/users/profiles/minecraft/';
     private const TEXTURE_API_URL = 'https://sessionserver.mojang.com/session/minecraft/profile/';
+    private CacheManager $cacheManager;
     
     /**
      * 错误代码定义
@@ -32,12 +34,23 @@ class SkinService
         ]
     ];
 
+    public function __construct()
+    {
+        $this->cacheManager = new CacheManager();
+    }
+
     /**
      * 获取玩家头像
      */
     public function getPlayerHead(string $username): string
     {
         try {
+            // 检查缓存
+            $cachedAvatar = $this->cacheManager->getCachedAvatar($username);
+            if ($cachedAvatar !== null) {
+                return $cachedAvatar;
+            }
+
             // 获取玩家UUID
             $uuid = $this->getPlayerUUID($username);
             
@@ -48,7 +61,12 @@ class SkinService
             $skinData = $this->downloadSkin($skinUrl);
             
             // 处理头像
-            return $this->processHeadImage($skinData);
+            $avatarData = $this->processHeadImage($skinData);
+
+            // 保存到缓存
+            $this->cacheManager->cacheAvatar($username, $avatarData);
+
+            return $avatarData;
         } catch (Exception $e) {
             // 设置正确的 HTTP 状态码
             http_response_code($this->getErrorCode($e->getMessage()));

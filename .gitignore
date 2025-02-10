@@ -1,15 +1,26 @@
+# IDE and Editor files
+.idea/
+.vscode/
+.cursor/
+
+# Cache directories
+/cache/
+/cache/avatars/
+
 # Project specific
 note.md
 projectinfo.md
-nginx.conf
-*.conf
 
-# IDE specific
-.cursor/
-.vscode/
-.idea/
+# Composer
+/vendor/
+composer.lock
 
-# System specific
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS generated files
 .DS_Store
 Thumbs.db
 
@@ -23,7 +34,6 @@ yarn-error.log
 __pycache__/
 *.py[cod]
 *$py.class
-.env
 venv/
 .env/
 
@@ -33,4 +43,8 @@ build/
 *.exe
 *.dll
 *.so
-*.dylib 
+*.dylib
+
+# Configuration files
+nginx.conf
+*.conf 
