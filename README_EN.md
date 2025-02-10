@@ -12,9 +12,9 @@ English | [简体中文](README.md)
 - 🛡️ **Error Handling**: Robust error handling mechanism
 - 💾 **Resource Optimization**: Browser caching support for bandwidth saving
 
-## 🔥 Live Demo
+## 🔥 Ready-to-Use API
 
-Visit the demo site: `http://your-domain/head/Notch`
+Try it now: `http://api.rms.net.cn/head/XRain666`
 
 ## 🚀 Quick Start
 
