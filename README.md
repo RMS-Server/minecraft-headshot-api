@@ -126,13 +126,6 @@ http://your-domain/head/Notch
 - HTTP 缓存：配置浏览器缓存，有效期 30 天
 - 错误缓存：临时缓存无效的用户名
 
-## 📝 开发计划
-
-- [ ] 支持自定义图片尺寸
-- [ ] 添加 API 访问频率限制
-- [ ] 支持更多图片格式
-- [ ] 添加用户认证机制
-- [ ] 优化缓存策略
 
 ## 🤝 贡献指南
 
@@ -144,14 +137,4 @@ http://your-domain/head/Notch
 
 ## 📄 开源协议
 
-本项目采用 MIT 协议 - 查看 [LICENSE](LICENSE) 文件了解详情
-
-## 👨‍💻 作者
-
-XRain
-
-## 🙏 鸣谢
-
-- [Minecraft](https://www.minecraft.net/) - 提供游戏和 API 支持
-- [Slim Framework](https://www.slimframework.com/) - PHP 微框架
-- [Mojang API](https://wiki.vg/Mojang_API) - 官方 API 文档 
+本项目采用 GPL 协议 - 查看 [LICENSE](LICENSE) 文件了解详情

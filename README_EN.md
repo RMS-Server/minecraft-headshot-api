@@ -126,14 +126,6 @@ http://your-domain/head/Notch
 - HTTP Cache: Browser cache with 30-day expiration
 - Error Cache: Temporary cache for invalid usernames
 
-## 📝 Roadmap
-
-- [ ] Custom image size support
-- [ ] API rate limiting
-- [ ] Additional image format support
-- [ ] User authentication
-- [ ] Enhanced caching strategy
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -145,13 +137,3 @@ http://your-domain/head/Notch
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
-
-## 👨‍💻 Author
-
-XRain
-
-## 🙏 Acknowledgments
-
-- [Minecraft](https://www.minecraft.net/) - For the game and API support
-- [Slim Framework](https://www.slimframework.com/) - PHP micro framework
-- [Mojang API](https://wiki.vg/Mojang_API) - Official API documentation 
