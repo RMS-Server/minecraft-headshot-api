@@ -42,7 +42,36 @@ composer install
 3. Configure Web Server:
 Point your web root to the `public` folder and set up URL rewriting rules.
 
-### Nginx Configuration Example
+### Nginx Configuration
+
+The project provides an example Nginx configuration file `nginx.conf.example`. Follow these steps:
+
+1. Copy the example configuration file:
+```bash
+cp nginx.conf.example nginx.conf
+```
+
+2. Modify the following in the configuration file:
+   - `server_name`: Change to your domain
+   - `root`: Change to your project's actual public directory path
+   - `fastcgi_pass`: Adjust according to your PHP-FPM configuration
+   - Log paths: Set appropriate log paths for your environment
+
+3. Test the configuration:
+```bash
+nginx -t
+```
+
+4. Restart Nginx:
+```bash
+systemctl restart nginx
+```
+
+Note: For security reasons, `nginx.conf` has been added to `.gitignore` and will not be committed to version control.
+
+### Basic Rewrite Rules
+
+If you prefer to use your own Nginx configuration, ensure it includes at least these rewrite rules:
 
 ```nginx
 location / {

@@ -1,0 +1,38 @@
+server {
+    listen 80;
+    server_name your-domain.com;
+    index index.php index.html;
+    root /path/to/your/public;  # 指向 public 目录
+
+    # Slim Framework 重写规则
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    # PHP 文件处理
+    location ~ \.php$ {
+        try_files $uri =404;
+        include fastcgi_params;
+        fastcgi_pass unix:/run/php/php-fpm.sock;  # 根据你的 PHP-FPM 配置调整
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    # 图片缓存设置
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|webp)$ {
+        expires      30d;
+        error_log off;
+        access_log off;
+        add_header Cache-Control "public, no-transform";
+    }
+
+    # JS/CSS缓存设置
+    location ~ .*\.(js|css)?$ {
+        expires      12h;
+        error_log off;
+        access_log off;
+    }
+
+    # 日志配置
+    access_log  /path/to/your/access.log;
+    error_log   /path/to/your/error.log;
+}

@@ -42,7 +42,36 @@ composer install
 3. 配置 Web 服务器：
 将网站根目录指向 `public` 文件夹，并配置 URL 重写规则。
 
-### Nginx 配置示例
+### Nginx 配置
+
+项目提供了一个示例 Nginx 配置文件 `nginx.conf.example`。使用步骤：
+
+1. 复制示例配置文件：
+```bash
+cp nginx.conf.example nginx.conf
+```
+
+2. 修改配置文件中的以下内容：
+   - `server_name`: 改为你的域名
+   - `root`: 改为你的项目 public 目录的实际路径
+   - `fastcgi_pass`: 根据你的 PHP-FPM 配置调整
+   - 日志路径: 设置适合你的环境的日志路径
+
+3. 测试配置：
+```bash
+nginx -t
+```
+
+4. 重启 Nginx：
+```bash
+systemctl restart nginx
+```
+
+注意：出于安全考虑，`nginx.conf` 文件已被添加到 `.gitignore` 中，不会被提交到版本控制系统。
+
+### 基本重写规则
+
+如果你想使用自己的 Nginx 配置，确保至少包含以下重写规则：
 
 ```nginx
 location / {

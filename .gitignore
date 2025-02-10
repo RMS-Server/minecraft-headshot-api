@@ -1,6 +1,8 @@
 # Project specific
 note.md
 projectinfo.md
+nginx.conf
+*.conf
 
 # IDE specific
 .cursor/
