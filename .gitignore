@@ -1,0 +1,34 @@
+# Project specific
+note.md
+projectinfo.md
+
+# IDE specific
+.cursor/
+.vscode/
+.idea/
+
+# System specific
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+.env/
+
+# Build
+dist/
+build/
+*.exe
+*.dll
+*.so
+*.dylib 
