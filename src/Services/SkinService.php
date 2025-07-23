@@ -163,19 +163,42 @@ class SkinService
             throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
         }
         
-        // 启用alpha混合
-        imagealphablending($canvas, true);
+        // 关闭alpha混合以保持透明度
+        imagealphablending($canvas, false);
         imagesavealpha($canvas, true);
         
-        // 设置透明背景
+        // 设置完全透明背景
         $transparent = imagecolorallocatealpha($canvas, 0, 0, 0, 127);
         imagefill($canvas, 0, 0, $transparent);
+        
+        // 重新开启alpha混合用于后续操作
+        imagealphablending($canvas, true);
         
         // 将基础头部放大到14x14并居中放置（留1像素边距）
         imagecopyresized($canvas, $skin, 1, 1, 8, 8, 14, 14, 8, 8);
         
-        // 将帽子层放大到整个16x16画布
-        imagecopyresized($canvas, $skin, 0, 0, 40, 8, 16, 16, 8, 8);
+        // 处理帽子层透明度：逐像素检查并只复制非透明像素
+        for ($y = 0; $y < 16; $y++) {
+            for ($x = 0; $x < 16; $x++) {
+                // 计算源像素位置
+                $srcX = 40 + intval($x * 8 / 16);
+                $srcY = 8 + intval($y * 8 / 16);
+                
+                // 获取帽子层像素颜色
+                $color = imagecolorat($skin, $srcX, $srcY);
+                
+                // 提取RGBA值
+                $r = ($color >> 16) & 0xFF;
+                $g = ($color >> 8) & 0xFF;
+                $b = $color & 0xFF;
+                $a = ($color >> 24) & 0x7F;
+                
+                // 只有当像素不是纯黑色(0,0,0)且不是完全透明时才绘制
+                if (!($r == 0 && $g == 0 && $b == 0) && $a < 127) {
+                    imagesetpixel($canvas, $x, $y, $color);
+                }
+            }
+        }
         
         // 最终放大到128x128
         $finalHead = imagecreatetruecolor(128, 128);
@@ -183,9 +206,16 @@ class SkinService
             throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
         }
         
-        // 启用alpha混合
-        imagealphablending($finalHead, true);
+        // 关闭alpha混合以保持透明度
+        imagealphablending($finalHead, false);
         imagesavealpha($finalHead, true);
+        
+        // 设置透明背景
+        $finalTransparent = imagecolorallocatealpha($finalHead, 0, 0, 0, 127);
+        imagefill($finalHead, 0, 0, $finalTransparent);
+        
+        // 重新开启alpha混合用于复制操作
+        imagealphablending($finalHead, true);
         
         // 使用最近邻插值算法放大
         imagecopyresized($finalHead, $canvas, 0, 0, 0, 0, 128, 128, 16, 16);
