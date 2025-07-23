@@ -34,13 +34,13 @@
 复制以下命令到终端直接运行：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/RMS-Server/minecraft-headshot-api/master/scripts/install.sh | sudo bash
 ```
 
 或者使用 wget：
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.sh | sudo bash
+wget -qO- https://raw.githubusercontent.com/RMS-Server/minecraft-headshot-api/master/scripts/install.sh | sudo bash
 ```
 
 #### Windows 系统
@@ -48,13 +48,13 @@ wget -qO- https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/maste
 以管理员身份打开 PowerShell，运行：
 
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.bat" -OutFile "install.bat"; .\install.bat
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/RMS-Server/minecraft-headshot-api/master/scripts/install.bat" -OutFile "install.bat"; .\install.bat
 ```
 
 或者手动下载：
 
 ```batch
-curl -o install.bat https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.bat && install.bat
+curl -o install.bat https://raw.githubusercontent.com/RMS-Server/minecraft-headshot-api/master/scripts/install.bat && install.bat
 ```
 
 ### 手动安装步骤
@@ -63,7 +63,7 @@ curl -o install.bat https://raw.githubusercontent.com/XRain66/minecraft-headshot
 
 1. 克隆仓库：
 ```bash
-git clone https://github.com/XRain66/minecraft-headshot-api.git
+git clone https://github.com/RMS-Server/minecraft-headshot-api.git
 ```
 
 2. 安装依赖：

@@ -34,13 +34,13 @@ Try it now: `http://api.rms.net.cn/head/XRain666`
 Copy and run the following command in your terminal:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/RMS-Server/minecraft-headshot-api/master/scripts/install.sh | sudo bash
 ```
 
 Or using wget:
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.sh | sudo bash
+wget -qO- https://raw.githubusercontent.com/RMS-Server/minecraft-headshot-api/master/scripts/install.sh | sudo bash
 ```
 
 #### Windows Systems
@@ -48,13 +48,13 @@ wget -qO- https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/maste
 Run PowerShell as Administrator and execute:
 
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.bat" -OutFile "install.bat"; .\install.bat
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/RMS-Server/minecraft-headshot-api/master/scripts/install.bat" -OutFile "install.bat"; .\install.bat
 ```
 
 Or manually download:
 
 ```batch
-curl -o install.bat https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.bat && install.bat
+curl -o install.bat https://raw.githubusercontent.com/RMS-Server/minecraft-headshot-api/master/scripts/install.bat && install.bat
 ```
 
 ### Manual Installation
@@ -63,7 +63,7 @@ If one-click deployment encounters issues, you can install manually:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/XRain66/minecraft-headshot-api.git
+git clone https://github.com/RMS-Server/minecraft-headshot-api.git
 ```
 
 2. Install dependencies:

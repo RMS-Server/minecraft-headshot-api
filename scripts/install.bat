@@ -16,7 +16,7 @@ set "BLUE=[94m"
 set "NC=[0m"
 
 REM 项目配置
-set "PROJECT_REPO=https://github.com/XRain66/minecraft-headshot-api.git"
+set "PROJECT_REPO=https://github.com/RMS-Server/minecraft-headshot-api.git"
 set "PROJECT_NAME=minecraft-headshot-api"
 set "INSTALL_DIR=C:\inetpub\wwwroot\%PROJECT_NAME%"
 set "TEMP_DIR=%TEMP%\%PROJECT_NAME%-install"
@@ -395,7 +395,7 @@ echo 1. 根据上面的配置指南设置Web服务器
 echo 2. 访问您的网站测试API功能
 echo 3. 查看项目文档了解更多配置选项
 echo.
-echo 如需帮助，请访问: https://github.com/XRain66/minecraft-headshot-api
+echo 如需帮助，请访问: https://github.com/RMS-Server/minecraft-headshot-api
 echo.
 
 :end

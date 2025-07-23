@@ -14,7 +14,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # 项目配置
-PROJECT_REPO="https://github.com/XRain66/minecraft-headshot-api.git"
+PROJECT_REPO="https://github.com/RMS-Server/minecraft-headshot-api.git"
 PROJECT_NAME="minecraft-headshot-api"
 INSTALL_DIR="/var/www/$PROJECT_NAME"
 TEMP_DIR="/tmp/$PROJECT_NAME-install"
@@ -54,7 +54,7 @@ detect_os() {
 check_root() {
     if [ "$EUID" -ne 0 ]; then
         log_error "请使用root权限运行此脚本"
-        log_info "使用方法: curl -fsSL https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.sh | sudo bash"
+        log_info "使用方法: curl -fsSL https://raw.githubusercontent.com/RMS-Server/minecraft-headshot-api/master/scripts/install.sh | sudo bash"
         exit 1
     fi
 }
