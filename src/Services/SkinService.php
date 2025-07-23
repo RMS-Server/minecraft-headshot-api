@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Cache\CacheManager;
 use Exception;
 use GdImage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class SkinService
 {
@@ -145,7 +147,7 @@ class SkinService
      */
     private function processHeadImage(string $skinData): string
     {
-        // 创建原始图片
+        // 回退到GD库实现，但使用更简洁的方法
         $skin = @imagecreatefromstring($skinData);
         if (!$skin) {
             throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
@@ -155,66 +157,27 @@ class SkinService
         imagealphablending($skin, true);
         imagesavealpha($skin, true);
         
-        // 创建新图片，支持透明度
-        $head = imagecreatetruecolor(8, 8);
-        if (!$head) {
+        // 创建16x16的高分辨率画布（2倍放大）
+        $canvas = imagecreatetruecolor(16, 16);
+        if (!$canvas) {
             throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
         }
         
         // 启用alpha混合
-        imagealphablending($head, true);
-        imagesavealpha($head, true);
-        
-        // 复制基础头部区域（8x8像素）
-        imagecopy($head, $skin, 0, 0, 8, 8, 8, 8);
-        
-        // 创建稍大的画布来处理帽子层 (10x10，为了让帽子层比基础层大)
-        $baseSize = 8;
-        $hatCanvasSize = 10; // 帽子画布比基础层大2像素
-        $headWithHat = imagecreatetruecolor($hatCanvasSize, $hatCanvasSize);
-        if (!$headWithHat) {
-            throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
-        }
-        
-        // 启用alpha混合
-        imagealphablending($headWithHat, true);
-        imagesavealpha($headWithHat, true);
+        imagealphablending($canvas, true);
+        imagesavealpha($canvas, true);
         
         // 设置透明背景
-        $transparent = imagecolorallocatealpha($headWithHat, 0, 0, 0, 127);
-        imagefill($headWithHat, 0, 0, $transparent);
+        $transparent = imagecolorallocatealpha($canvas, 0, 0, 0, 127);
+        imagefill($canvas, 0, 0, $transparent);
         
-        // 先放置基础头部（居中位置：偏移1像素）
-        imagecopy($headWithHat, $head, 1, 1, 0, 0, $baseSize, $baseSize);
+        // 将基础头部放大到14x14并居中放置（留1像素边距）
+        imagecopyresized($canvas, $skin, 1, 1, 8, 8, 14, 14, 8, 8);
         
-        // 创建帽子层临时图像
-        $hatLayer = imagecreatetruecolor(8, 8);
-        if (!$hatLayer) {
-            throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
-        }
+        // 将帽子层放大到整个16x16画布
+        imagecopyresized($canvas, $skin, 0, 0, 40, 8, 16, 16, 8, 8);
         
-        // 启用alpha混合
-        imagealphablending($hatLayer, true);
-        imagesavealpha($hatLayer, true);
-        
-        // 设置透明背景
-        $hatTransparent = imagecolorallocatealpha($hatLayer, 0, 0, 0, 127);
-        imagefill($hatLayer, 0, 0, $hatTransparent);
-        
-        // 复制帽子层数据
-        imagecopy($hatLayer, $skin, 0, 0, 40, 8, 8, 8);
-        
-        // 将帽子层放大到10x10并叠加在基础层上方
-        imagecopyresampled($headWithHat, $hatLayer, 0, 0, 0, 0, $hatCanvasSize, $hatCanvasSize, $baseSize, $baseSize);
-        
-        // 清理临时资源
-        imagedestroy($hatLayer);
-        
-        // 更新head为新的包含帽子层的图像
-        imagedestroy($head);
-        $head = $headWithHat;
-        
-        // 放大图片
+        // 最终放大到128x128
         $finalHead = imagecreatetruecolor(128, 128);
         if (!$finalHead) {
             throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
@@ -225,7 +188,7 @@ class SkinService
         imagesavealpha($finalHead, true);
         
         // 使用最近邻插值算法放大
-        imagecopyresampled($finalHead, $head, 0, 0, 0, 0, 128, 128, $hatCanvasSize, $hatCanvasSize);
+        imagecopyresized($finalHead, $canvas, 0, 0, 0, 0, 128, 128, 16, 16);
         
         // 输出为WEBP
         ob_start();
@@ -234,7 +197,7 @@ class SkinService
         
         // 清理资源
         imagedestroy($skin);
-        imagedestroy($head);
+        imagedestroy($canvas);
         imagedestroy($finalHead);
         
         return $imageData;
