@@ -151,14 +151,68 @@ class SkinService
             throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
         }
         
-        // 创建新图片
+        // 启用alpha混合
+        imagealphablending($skin, true);
+        imagesavealpha($skin, true);
+        
+        // 创建新图片，支持透明度
         $head = imagecreatetruecolor(8, 8);
         if (!$head) {
             throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
         }
         
-        // 复制头部区域（8x8像素）
+        // 启用alpha混合
+        imagealphablending($head, true);
+        imagesavealpha($head, true);
+        
+        // 复制基础头部区域（8x8像素）
         imagecopy($head, $skin, 0, 0, 8, 8, 8, 8);
+        
+        // 创建稍大的画布来处理帽子层 (10x10，为了让帽子层比基础层大)
+        $baseSize = 8;
+        $hatCanvasSize = 10; // 帽子画布比基础层大2像素
+        $headWithHat = imagecreatetruecolor($hatCanvasSize, $hatCanvasSize);
+        if (!$headWithHat) {
+            throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
+        }
+        
+        // 启用alpha混合
+        imagealphablending($headWithHat, true);
+        imagesavealpha($headWithHat, true);
+        
+        // 设置透明背景
+        $transparent = imagecolorallocatealpha($headWithHat, 0, 0, 0, 127);
+        imagefill($headWithHat, 0, 0, $transparent);
+        
+        // 先放置基础头部（居中位置：偏移1像素）
+        imagecopy($headWithHat, $head, 1, 1, 0, 0, $baseSize, $baseSize);
+        
+        // 创建帽子层临时图像
+        $hatLayer = imagecreatetruecolor(8, 8);
+        if (!$hatLayer) {
+            throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
+        }
+        
+        // 启用alpha混合
+        imagealphablending($hatLayer, true);
+        imagesavealpha($hatLayer, true);
+        
+        // 设置透明背景
+        $hatTransparent = imagecolorallocatealpha($hatLayer, 0, 0, 0, 127);
+        imagefill($hatLayer, 0, 0, $hatTransparent);
+        
+        // 复制帽子层数据
+        imagecopy($hatLayer, $skin, 0, 0, 40, 8, 8, 8);
+        
+        // 将帽子层放大到10x10并叠加在基础层上方
+        imagecopyresampled($headWithHat, $hatLayer, 0, 0, 0, 0, $hatCanvasSize, $hatCanvasSize, $baseSize, $baseSize);
+        
+        // 清理临时资源
+        imagedestroy($hatLayer);
+        
+        // 更新head为新的包含帽子层的图像
+        imagedestroy($head);
+        $head = $headWithHat;
         
         // 放大图片
         $finalHead = imagecreatetruecolor(128, 128);
@@ -166,8 +220,12 @@ class SkinService
             throw new Exception(self::ERROR_CODES['PROCESS_FAILED']['message']);
         }
         
+        // 启用alpha混合
+        imagealphablending($finalHead, true);
+        imagesavealpha($finalHead, true);
+        
         // 使用最近邻插值算法放大
-        imagecopyresampled($finalHead, $head, 0, 0, 0, 0, 128, 128, 8, 8);
+        imagecopyresampled($finalHead, $head, 0, 0, 0, 0, 128, 128, $hatCanvasSize, $hatCanvasSize);
         
         // 输出为WEBP
         ob_start();
