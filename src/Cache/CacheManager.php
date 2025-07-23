@@ -5,7 +5,7 @@ namespace App\Cache;
 class CacheManager
 {
     private string $cacheDir;
-    private const CACHE_EXPIRE_DAYS = 30;
+    private const CACHE_EXPIRE_DAYS = 7;
 
     public function __construct()
     {

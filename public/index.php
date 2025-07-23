@@ -11,6 +11,9 @@ $container = new Container();
 $container->set('App\Services\SkinService', function() {
     return new App\Services\SkinService();
 });
+$container->set('App\Services\StatsManager', function() {
+    return new App\Services\StatsManager();
+});
 
 AppFactory::setContainer($container);
 $app = AppFactory::create();
@@ -51,6 +54,32 @@ $app->get('/head/{username}', function (Request $request, Response $response, ar
             'success' => false,
             'error' => $e->getMessage()
         ]));
+        return $response;
+    }
+});
+
+// API使用统计查询路由
+$app->get('/uses', function (Request $request, Response $response, array $args) {
+    try {
+        $statsManager = $this->get('App\Services\StatsManager');
+        $totalCalls = $statsManager->getTotalCalls();
+        
+        $result = [
+            'success' => true,
+            'total_calls' => $totalCalls,
+            'message' => "API总调用次数: {$totalCalls}"
+        ];
+        
+        $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
+        $response->getBody()->write(json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        return $response;
+    } catch (Exception $e) {
+        $response = $response->withStatus(500)
+                            ->withHeader('Content-Type', 'application/json; charset=utf-8');
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'error' => $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE));
         return $response;
     }
 });

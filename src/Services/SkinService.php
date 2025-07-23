@@ -11,6 +11,7 @@ class SkinService
     private const MOJANG_API_URL = 'https://api.mojang.com/users/profiles/minecraft/';
     private const TEXTURE_API_URL = 'https://sessionserver.mojang.com/session/minecraft/profile/';
     private CacheManager $cacheManager;
+    private StatsManager $statsManager;
     
     /**
      * 错误代码定义
@@ -37,6 +38,7 @@ class SkinService
     public function __construct()
     {
         $this->cacheManager = new CacheManager();
+        $this->statsManager = new StatsManager();
     }
 
     /**
@@ -44,6 +46,9 @@ class SkinService
      */
     public function getPlayerHead(string $username): string
     {
+        // 增加API调用计数
+        $this->statsManager->incrementApiCall();
+        
         try {
             // 检查缓存
             $cachedAvatar = $this->cacheManager->getCachedAvatar($username);
