@@ -67,7 +67,6 @@ nginx -t
 systemctl restart nginx
 ```
 
-Note: For security reasons, `nginx.conf` has been added to `.gitignore` and will not be committed to version control.
 
 ### Basic Rewrite Rules
 
@@ -83,15 +82,24 @@ location / {
 
 ### Basic Usage
 
-Get player head avatar:
-```
-GET /head/{username}
-```
+- Get player head avatar:
+  ```
+  GET /head/{username}
+  ```
 
-Example:
-```
-http://your-domain/head/Notch
-```
+  Example:
+  ```
+  http://your-domain/head/Notch
+  ```
+- Get the number of API calls
+  ```
+  GET /uses
+  ```
+
+  Example:
+  ```
+  http://your-domain/uses
+  ```
 
 ### Response Format
 

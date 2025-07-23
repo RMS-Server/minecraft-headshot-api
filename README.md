@@ -67,7 +67,6 @@ nginx -t
 systemctl restart nginx
 ```
 
-注意：出于安全考虑，`nginx.conf` 文件已被添加到 `.gitignore` 中，不会被提交到版本控制系统。
 
 ### 基本重写规则
 
@@ -83,15 +82,25 @@ location / {
 
 ### 基本用法
 
-获取玩家头像：
-```
-GET /head/{username}
-```
+- 获取玩家头像：
+  ```
+  GET /head/{username}
+  ```
 
-示例：
-```
-http://your-domain/head/Notch
-```
+  示例：
+  ```
+  http://your-domain/head/Notch
+  ```
+
+- 获取API调用次数：
+  ```
+  GET /uses
+  ```
+
+  示例：
+  ```
+  http://your-domain/uses
+  ```
 
 ### 响应格式
 
