@@ -82,7 +82,7 @@ location / {
 
 ### Basic Usage
 
-- Get player head avatar:
+- Get player head avatar (with cache):
   ```
   GET /head/{username}
   ```
@@ -91,7 +91,18 @@ location / {
   ```
   http://your-domain/head/Notch
   ```
-- Get the number of API calls
+
+- Get player head avatar (without cache):
+  ```
+  GET /head/{username}/nocache
+  ```
+
+  Example:
+  ```
+  http://your-domain/head/Notch/nocache
+  ```
+
+- Get the number of API calls:
   ```
   GET /uses
   ```
@@ -130,9 +141,10 @@ location / {
 
 ### Caching Mechanism
 
-- Local Cache: Cache retrieved avatars
-- HTTP Cache: Browser cache with 30-day expiration
-- Error Cache: Temporary cache for invalid usernames
+- **Local Cache**: Default route `/head/{username}` caches retrieved avatars for 7 days
+- **HTTP Cache**: Default route sets browser cache with 1-hour expiration
+- **No-Cache Mode**: Use `/head/{username}/nocache` route to bypass all caches and always get fresh avatars
+- **Error Cache**: Temporary cache for invalid usernames to avoid repeated requests
 
 ## 🤝 Contributing
 

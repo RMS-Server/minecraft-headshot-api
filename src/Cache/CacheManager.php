@@ -26,7 +26,6 @@ class CacheManager
             return null;
         }
 
-        // 检查缓存是否过期
         $fileTime = filemtime($cachePath);
         if ($fileTime === false || (time() - $fileTime) > (self::CACHE_EXPIRE_DAYS * 24 * 60 * 60)) {
             unlink($cachePath);
