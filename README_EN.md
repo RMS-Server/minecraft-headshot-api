@@ -27,7 +27,39 @@ Try it now: `http://api.rms.net.cn/head/XRain666`
   - cURL Extension (API Requests)
   - WebP Support
 
-### Installation
+### 🚀 One-Click Deployment (Recommended)
+
+#### Linux Systems (Ubuntu/Debian/CentOS)
+
+Copy and run the following command in your terminal:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.sh | sudo bash
+```
+
+Or using wget:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.sh | sudo bash
+```
+
+#### Windows Systems
+
+Run PowerShell as Administrator and execute:
+
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.bat" -OutFile "install.bat"; .\install.bat
+```
+
+Or manually download:
+
+```batch
+curl -o install.bat https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.bat && install.bat
+```
+
+### Manual Installation
+
+If one-click deployment encounters issues, you can install manually:
 
 1. Clone the repository:
 ```bash

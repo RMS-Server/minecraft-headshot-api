@@ -27,7 +27,39 @@
   - cURL 扩展（API 请求）
   - WebP 支持
 
-### 安装步骤
+### 🚀 一键部署（推荐）
+
+#### Linux 系统（Ubuntu/Debian/CentOS）
+
+复制以下命令到终端直接运行：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.sh | sudo bash
+```
+
+或者使用 wget：
+
+```bash
+wget -qO- https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.sh | sudo bash
+```
+
+#### Windows 系统
+
+以管理员身份打开 PowerShell，运行：
+
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.bat" -OutFile "install.bat"; .\install.bat
+```
+
+或者手动下载：
+
+```batch
+curl -o install.bat https://raw.githubusercontent.com/XRain66/minecraft-headshot-api/master/scripts/install.bat && install.bat
+```
+
+### 手动安装步骤
+
+如果一键部署遇到问题，可以手动安装：
 
 1. 克隆仓库：
 ```bash
